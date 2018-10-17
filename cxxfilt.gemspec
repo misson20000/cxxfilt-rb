@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = CXXFilt::VERSION
   spec.authors       = ["misson20000"]
   spec.email         = ["xenotoad@xenotoad.net"]
-  spec.licenses      = ["MIT"]
+  spec.licenses      = ["LGPL-2.1-or-later"]
 
   spec.summary       = "Demangle C++ symbols"
   spec.homepage      = "https://github.com/misson20000/cxxfilt-rb"

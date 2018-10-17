@@ -6,7 +6,7 @@ module CXXFilt
     attr_reader :doc
   end
 
-  demangler_map = Hash[@demanglers.map do |d|
+  @demangler_map = Hash[@demanglers.map do |d|
                          [d.name.to_sym, d]
                        end]
 
@@ -14,14 +14,14 @@ module CXXFilt
     @demanglers
   end
   
-  def method_missing(sym, *args)
-    if demangler_map.include?(sym) then
-      return demangler_map[sym]
+  def self.method_missing(sym, *args)
+    if @demangler_map.include?(sym) then
+      return @demangler_map[sym]
     end
     super
   end
 
-  def respond_to_missing?(sym, include_private=false)
-    demangler_map.include?(sym) || super
+  def self.respond_to_missing?(sym, include_private=false)
+    @demangler_map.include?(sym) || super
   end
 end
