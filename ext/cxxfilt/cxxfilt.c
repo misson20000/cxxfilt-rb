@@ -1,6 +1,6 @@
 #include<ruby.h>
 
-#include "libiberty/demangle.h"
+#include "demangle.h"
 
 static VALUE c_Demangler = Qnil;
 static VALUE v_auto_demangler = Qnil;
