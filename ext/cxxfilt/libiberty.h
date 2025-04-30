@@ -1,7 +1,7 @@
 /* Function declarations for libiberty.
 
-   Copyright (C) 1997-2018 Free Software Foundation, Inc.
-   
+   Copyright (C) 1997-2025 Free Software Foundation, Inc.
+
    Note - certain prototypes declared in this header file are for
    functions whoes implementation copyright does not belong to the
    FSF.  Those prototypes are present in this file for reference
@@ -23,7 +23,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin Street - Fifth Floor,
    Boston, MA 02110-1301, USA.
-   
+
    Written by Cygnus Support, 1994.
 
    The libiberty library provides a number of functions which are
@@ -108,7 +108,7 @@ extern int countargv (char * const *);
 #if defined (__GNU_LIBRARY__ ) || defined (__linux__) \
  || defined (__FreeBSD__) || defined (__OpenBSD__) || defined (__NetBSD__) \
  || defined (__CYGWIN__) || defined (__CYGWIN32__) || defined (__MINGW32__) \
- || defined (__DragonFly__) || defined (HAVE_DECL_BASENAME) 
+ || defined (__DragonFly__) || defined (HAVE_DECL_BASENAME)
 extern char *basename (const char *) ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_NONNULL(1);
 #else
 /* Do not allow basename to be used if there is no prototype seen.  We
@@ -133,9 +133,25 @@ extern const char *dos_lbasename (const char *) ATTRIBUTE_RETURNS_NONNULL ATTRIB
 
 extern const char *unix_lbasename (const char *) ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_NONNULL(1);
 
+/* A dirname () that is always compiled in.  */
+
+extern char *ldirname (const char *) ATTRIBUTE_NONNULL(1);
+
+/* Same, but assumes DOS semantics regardless of host.  */
+
+extern char *dos_ldirname (const char *) ATTRIBUTE_NONNULL(1);
+
+/* Same, but assumes Unix semantics regardless of host.  */
+
+extern char *unix_ldirname (const char *) ATTRIBUTE_NONNULL(1);
+
 /* A well-defined realpath () that is always compiled in.  */
 
 extern char *lrealpath (const char *);
+
+/* Return true when FD file descriptor exists.  */
+
+extern int is_valid_fd (int fd);
 
 /* Concatenate an arbitrary number of strings.  You must pass NULL as
    the last argument of this function, to terminate the list of
@@ -195,6 +211,20 @@ extern int fdmatch (int fd1, int fd2);
 extern int ffs(int);
 #endif
 
+#if defined (HAVE_DECL_MKSTEMPS) && !HAVE_DECL_MKSTEMPS
+extern int mkstemps(char *, int);
+#endif
+
+#if defined (HAVE_DECL_MKSTEMPS) && !HAVE_DECL_MKSTEMPS
+extern int mkstemps(char *, int);
+#endif
+
+/* Make memrchr available on systems that do not have it.  */
+#if !defined (__GNU_LIBRARY__ ) && !defined (__linux__) && \
+    !defined (HAVE_MEMRCHR)
+extern void *memrchr(const void *, int, size_t);
+#endif
+
 /* Get the working directory.  The result is cached, so don't call
    chdir() between calls to getpwd().  */
 
@@ -206,7 +236,7 @@ extern char * getpwd (void);
 #ifdef __MINGW32__
 /* Forward declaration to avoid #include <sys/time.h>.   */
 struct timeval;
-extern int gettimeofday (struct timeval *, void *); 
+extern int gettimeofday (struct timeval *, void *);
 #endif
 
 /* Get the amount of time the process has run, in microseconds.  */
@@ -310,30 +340,30 @@ extern void xmalloc_failed (size_t) ATTRIBUTE_NORETURN;
    message to stderr (using the name set by xmalloc_set_program_name,
    if any) and then call xexit.  */
 
-extern void *xmalloc (size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL;
+extern void *xmalloc (size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_RESULT_SIZE_1 ATTRIBUTE_WARN_UNUSED_RESULT;
 
 /* Reallocate memory without fail.  This works like xmalloc.  Note,
    realloc type functions are not suitable for attribute malloc since
    they may return the same address across multiple calls. */
 
-extern void *xrealloc (void *, size_t) ATTRIBUTE_RETURNS_NONNULL;
+extern void *xrealloc (void *, size_t) ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_RESULT_SIZE_2 ATTRIBUTE_WARN_UNUSED_RESULT;
 
 /* Allocate memory without fail and set it to zero.  This works like
    xmalloc.  */
 
-extern void *xcalloc (size_t, size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL;
+extern void *xcalloc (size_t, size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_RESULT_SIZE_1_2 ATTRIBUTE_WARN_UNUSED_RESULT;
 
 /* Copy a string into a memory buffer without fail.  */
 
-extern char *xstrdup (const char *) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL;
+extern char *xstrdup (const char *) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_WARN_UNUSED_RESULT;
 
 /* Copy at most N characters from string into a buffer without fail.  */
 
-extern char *xstrndup (const char *, size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL;
+extern char *xstrndup (const char *, size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_WARN_UNUSED_RESULT;
 
 /* Copy an existing memory buffer to a new memory buffer without fail.  */
 
-extern void *xmemdup (const void *, size_t, size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL;
+extern void *xmemdup (const void *, size_t, size_t) ATTRIBUTE_MALLOC ATTRIBUTE_RETURNS_NONNULL ATTRIBUTE_WARN_UNUSED_RESULT;
 
 /* Physical memory routines.  Return values are in BYTES.  */
 extern double physmem_total (void);
@@ -456,7 +486,7 @@ extern struct pex_obj *pex_init (int flags, const char *pname,
 /* Capture stderr to a pipe.  The output can be read by
    calling pex_read_err and reading from the returned
    FILE object.  This flag may be specified only for
-   the last program in a pipeline.  
+   the last program in a pipeline.
 
    This flag is supported only on Unix and Windows.  */
 #define PEX_STDERR_TO_PIPE	0x40
@@ -558,7 +588,7 @@ extern FILE *pex_input_file (struct pex_obj *obj, int flags,
 extern FILE *pex_input_pipe (struct pex_obj *obj, int binary);
 
 /* Read the standard output of the last program to be executed.
-   pex_run can not be called after this.  BINARY should be non-zero if
+   pex_run cannot be called after this.  BINARY should be non-zero if
    the file should be opened in binary mode; this is ignored on Unix.
    Returns NULL on error.  Don't call fclose on the returned FILE; it
    will be closed by pex_free.  */
@@ -566,7 +596,7 @@ extern FILE *pex_input_pipe (struct pex_obj *obj, int binary);
 extern FILE *pex_read_output (struct pex_obj *, int binary);
 
 /* Read the standard error of the last program to be executed.
-   pex_run can not be called after this.  BINARY should be non-zero if
+   pex_run cannot be called after this.  BINARY should be non-zero if
    the file should be opened in binary mode; this is ignored on Unix.
    Returns NULL on error.  Don't call fclose on the returned FILE; it
    will be closed by pex_free.  */
@@ -637,6 +667,13 @@ extern int pexecute (const char *, char * const *, const char *,
 
 extern int pwait (int, int *, int);
 
+/* Like bsearch, but takes and passes on an argument like qsort_r.  */
+
+extern void *bsearch_r (const void *, const void *,
+			size_t, size_t,
+			int (*)(const void *, const void *, void *),
+			void *);
+
 #if defined(HAVE_DECL_ASPRINTF) && !HAVE_DECL_ASPRINTF
 /* Like sprintf but provides a pointer to malloc'd storage, which must
    be freed by the caller.  */
@@ -649,7 +686,7 @@ extern int asprintf (char **, const char *, ...) ATTRIBUTE_PRINTF_2;
 
 extern char *xasprintf (const char *, ...) ATTRIBUTE_MALLOC ATTRIBUTE_PRINTF_1;
 
-#if !HAVE_DECL_VASPRINTF
+#if defined(HAVE_DECL_VASPRINTF) && !HAVE_DECL_VASPRINTF
 /* Like vsprintf but provides a pointer to malloc'd storage, which
    must be freed by the caller.  */
 
@@ -700,11 +737,6 @@ extern long long int strtoll (const char *nptr,
 __extension__
 extern unsigned long long int strtoull (const char *nptr,
                                         char **endptr, int base);
-#endif
-
-#if defined(HAVE_DECL_STRVERSCMP) && !HAVE_DECL_STRVERSCMP
-/* Compare version strings.  */
-extern int strverscmp (const char *, const char *);
 #endif
 
 /* Set the title of a process */

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cxxfilt (0.1.4)
+    cxxfilt (0.1.5)
 
 GEM
   remote: https://rubygems.org/
@@ -13,7 +13,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    rake (10.5.0)
+    rake (13.2.1)
     rake-compiler (1.0.4)
       rake
     rspec (3.6.0)
@@ -35,12 +35,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 2.1)
+  bundler (~> 2.6)
   cxxfilt!
   pry
-  rake (~> 10.0)
+  rake (~> 13.2)
   rake-compiler
   rspec (~> 3.0)
 
 BUNDLED WITH
-   2.1.4
+   2.6.8
